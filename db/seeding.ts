@@ -24,7 +24,6 @@ async function seedDatabase() {
   ]
 
   await db.insert(cities).values(city)
-  console.log("Database seeded successfully!")
 }
 
 seedDatabase().catch((error) => {

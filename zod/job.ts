@@ -48,4 +48,14 @@ export const updateJobStatusScheme = z.object({
   status: z.enum(["NEW", "ASSIGNED", "TRANSCRIBED", "REVIEWED", "COMPLETED"]),
 })
 
+export const filterJobScheme = z.object({
+  name: z.string().optional(),
+  location: z.string().optional(),
+  city: z.string().optional(),
+  reporter: z.string().optional(),
+  editor: z.string().optional(),
+  status: z.string().optional(),
+})
+
+export type FilterJobInput = z.infer<typeof filterJobScheme>
 export type UpdateJobStatusInput = z.infer<typeof updateJobStatusScheme>

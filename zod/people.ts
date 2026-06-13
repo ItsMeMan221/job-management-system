@@ -13,6 +13,22 @@ const peopleSchema = z.object({
   available: z.boolean(),
 })
 
+const filterPeopleSchema = z.object({
+  name: z
+    .string()
+    .max(255, "Name must be less than 255 characters")
+    .trim()
+    .optional(),
+  city: z
+    .string()
+    .max(255, "City must be less than 255 characters")
+    .trim()
+    .optional(),
+  type: z.string().optional(),
+})
+
 export type PeopleInput = z.infer<typeof peopleSchema>
+export type FilterPeopleInput = z.infer<typeof filterPeopleSchema>
 
 export default peopleSchema
+export { filterPeopleSchema }

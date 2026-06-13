@@ -94,11 +94,8 @@ export default function ComboboxField<TShape>({
         // -----------------------------------------------------------------------
         if (multiple) {
           const selectedValues: unknown[] = Array.isArray(field.value)
-            ? field.value.map(
-                (v: ComboboxOption | null) =>
-                  typeof v === "object" && v !== null
-                    ? getValue(v, valueKey) // preserve original type
-                    : v // already primitive, keep as-is
+            ? field.value.map((v: ComboboxOption | null) =>
+                typeof v === "object" && v !== null ? getValue(v, valueKey) : v
               )
             : []
 
@@ -107,10 +104,9 @@ export default function ComboboxField<TShape>({
             .filter((o): o is ComboboxOption => o !== undefined)
 
           const handleChange = (newOptions: ComboboxOption[]) => {
-            // Return original value type (number stays number, string stays string)
             const values = newOptions.map((o) => getValue(o, valueKey))
             field.onChange(values)
-            onValueChange?.(values) // ← Tambah ini
+            onValueChange?.(values)
           }
 
           return (
@@ -189,8 +185,8 @@ export default function ComboboxField<TShape>({
           field.value !== undefined &&
           field.value !== ""
             ? typeof field.value === "object"
-              ? getValue(field.value, valueKey) // extract from object
-              : field.value // number/string — keep as-is
+              ? getValue(field.value, valueKey)
+              : field.value
             : undefined
 
         const selectedOption =
@@ -204,9 +200,9 @@ export default function ComboboxField<TShape>({
             onValueChange?.(null)
             return
           }
-          // Return original value type (number stays number, string stays string)
+
           field.onChange(getValue(newOption, valueKey))
-          onValueChange?.(getValue(newOption, valueKey)) // ← Tambah ini
+          onValueChange?.(getValue(newOption, valueKey))
         }
 
         return (

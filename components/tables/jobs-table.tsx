@@ -4,9 +4,31 @@ import { Edit } from "lucide-react"
 import { Button } from "../ui/button"
 import Link from "next/link"
 import { getJobs } from "@/server/jobs"
+import FilterJobTable from "./filter-job-table"
 
-export default async function JobsTable() {
-  const jobs = await getJobs()
+export default async function JobsTable({
+  searchParams,
+}: {
+  searchParams: {
+    name?: string
+    city?: string
+    location?: string
+    status?: string
+  }
+}) {
+  const params = searchParams || {}
+  const jobs = await getJobs({
+    name: params.name,
+    city: params.city,
+    location: params.location as "REMOTE" | "ONSITE" | undefined,
+    status: params.status as
+      | "NEW"
+      | "ASSIGNED"
+      | "TRANSCRIBED"
+      | "REVIEWED"
+      | "COMPLETED"
+      | undefined,
+  })
 
   type JobsRow = NonNullable<
     Awaited<ReturnType<typeof getJobs>>["data"]
@@ -80,5 +102,10 @@ export default async function JobsTable() {
       },
     },
   ]
-  return <DataTable columns={columns} data={jobs?.data || []}></DataTable>
+  return (
+    <>
+      <FilterJobTable />
+      <DataTable columns={columns} data={jobs?.data || []}></DataTable>
+    </>
+  )
 }

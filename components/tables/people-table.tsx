@@ -5,9 +5,25 @@ import { Badge } from "../ui/badge"
 import { Check, Edit, X } from "lucide-react"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import FilterPeopleTable from "./filter-people-table"
 
-export default async function PeopleTable() {
-  const people = await getPeople()
+export default async function PeopleTable({
+  searchParams,
+}: {
+  searchParams?: {
+    name?: string
+    city?: string
+    type?: string
+    available?: string
+  }
+}) {
+  const params = searchParams || {}
+
+  const people = await getPeople({
+    name: params.name,
+    city: params.city,
+    type: params.type as "REPORTER" | "EDITOR" | undefined,
+  })
 
   type PeopleRow = NonNullable<
     Awaited<ReturnType<typeof getPeople>>["data"]
@@ -71,5 +87,10 @@ export default async function PeopleTable() {
       },
     },
   ]
-  return <DataTable columns={columns} data={people?.data || []}></DataTable>
+  return (
+    <>
+      <FilterPeopleTable />
+      <DataTable columns={columns} data={people?.data || []}></DataTable>
+    </>
+  )
 }

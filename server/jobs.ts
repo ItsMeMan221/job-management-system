@@ -5,7 +5,7 @@ import { cities, Job, jobLog, jobs, peoples } from "@/db/scheme"
 import { and, eq, sql } from "drizzle-orm"
 import { alias } from "drizzle-orm/pg-core"
 
-export async function getJobs(filter?: Partial<Job>) {
+export async function getJobs(filter?: Partial<Job & { city: string }>) {
   const reporter = alias(peoples, "reporter")
   const editor = alias(peoples, "editor")
   const reporterCity = alias(cities, "reporterCity")
@@ -46,6 +46,18 @@ export async function getJobs(filter?: Partial<Job>) {
     const conditions = []
     if (filter.id) {
       conditions.push(eq(jobs.id, filter.id))
+    }
+    if (filter.name) {
+      conditions.push(sql`${jobs.name} ilike ${`%${filter.name}%`}`)
+    }
+    if (filter.city) {
+      conditions.push(sql`${cities.name} ilike ${`%${filter.city}%`}`)
+    }
+    if (filter.location) {
+      conditions.push(eq(jobs.location, filter.location))
+    }
+    if (filter.status) {
+      conditions.push(eq(jobs.status, filter.status))
     }
 
     const data = await db
